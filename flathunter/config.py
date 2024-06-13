@@ -169,6 +169,9 @@ Preis: {price}
             return default_value
         return res
 
+    def req_id(self):
+        return self._read_yaml_path('req_id', None)
+
     def set_searchers(self, searchers):
         """Update the active search plugins"""
         self.__searchers__ = searchers
