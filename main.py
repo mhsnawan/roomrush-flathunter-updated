@@ -48,7 +48,10 @@ if "mattermost" in notifiers:
     app.config["MM_WEBHOOK_URL"] = config.mattermost_webhook_url()
 
 if __name__ == '__main__':
+    _port = os.environ.get('PORT')
+    _port = _port if _port else 8080
+
     listen = config['website'].get('listen', {})
     host = listen.get('host', '127.0.0.1')
-    port = listen.get('port', '8080')
+    port = listen.get('port', _port)
     app.run(host=host, port=port, debug=True)

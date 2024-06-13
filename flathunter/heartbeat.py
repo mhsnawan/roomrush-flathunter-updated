@@ -3,6 +3,8 @@ from flathunter.abstract_notifier import Notifier
 from flathunter.config import YamlConfig
 from flathunter.logging import logger
 from flathunter.notifiers import SenderApprise, SenderMattermost, SenderTelegram, SenderSlack
+from flathunter.sender_whatsapp import SenderWhatsapp
+from flathunter.sender_webhook import SenderWebhook
 from flathunter.exceptions import HeartbeatException
 
 
@@ -36,6 +38,10 @@ class Heartbeat:
             self.notifier = SenderApprise(config)
         elif 'slack' in notifiers:
             self.notifier = SenderSlack(config)
+        elif 'whatsapp' in notifiers:
+            self.notifier = SenderWhatsapp(config)
+        elif 'webhook' in notifiers:
+            self.notifier = SenderWebhook(config) 
         else:
             raise HeartbeatException("No notifier configured - check 'notifiers' config section!")
 

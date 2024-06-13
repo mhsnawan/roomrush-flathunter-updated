@@ -256,6 +256,15 @@ Preis: {price}
     def notifiers(self) -> List[str]:
         """List of currently-active notifiers"""
         return self._read_yaml_path('notifiers', [])
+    
+    def whatsapp_api_key(self) -> Optional[str]:
+        return self._read_yaml_path('whatsapp.api_key', None)
+    
+    def webhook_api_key(self) -> Optional[str]:
+        return self._read_yaml_path('webhook.api_key', None)
+    
+    def whatsapp_receiver_ids(self):
+        return self._read_yaml_path('whatsapp.receiver_ids') or []
 
     def telegram_bot_token(self) -> Optional[str]:
         """API Token to authenticate to the Telegram bot"""

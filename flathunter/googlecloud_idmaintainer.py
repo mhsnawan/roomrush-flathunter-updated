@@ -5,6 +5,8 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import BaseQuery
+from google.cloud.firestore import Client as FirestoreClient
+from flathunter.config import Config
 
 from flathunter.logging import logger
 from flathunter.exceptions import PersistenceException
@@ -21,18 +23,20 @@ class GoogleCloudIdMaintainer:
         firebase_admin.initialize_app(credentials.ApplicationDefault(), {
             'projectId': project_id
         })
-        self.database = firestore.client()
+        self.database: FirestoreClient = firestore.client()
+        self.processed_id = f'processed-{config.req_id()}'
 
     def mark_processed(self, expose_id):
         """Mark exposes as processed when we have processed them"""
         logger.debug('mark_processed(%d)', expose_id)
-        self.database.collection('processed').document(
-            str(expose_id)).set({'id': expose_id})
+        # self.database.collection('processed').document(
+        #     str(expose_id)).set({'id': expose_id})
+        self.database.collection(self.processed_id).document(str(expose_id)).set({'id': expose_id})
 
     def is_processed(self, expose_id):
         """Returns true if an expose has already been marked as processed"""
         logger.debug('is_processed(%d)', expose_id)
-        doc = self.database.collection('processed').document(str(expose_id))
+        doc = self.database.collection(self.processed_id).document(str(expose_id))
         return doc.get().exists
 
     def save_expose(self, expose):
